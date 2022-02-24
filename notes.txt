@@ -1,0 +1,124 @@
+function greetUser(userName) { // username here is a variable used just for this function, it cannot be used anywhere else.
+    console.log("Hi " + userName);
+}
+
+greetUser("moff"); // moff is passed in as the variable value, so when we use it, it will say "Hi moff"
+
+If username is left empty, ie if the function is simply called as greetUser(), it will return "Hi undefined" because the username is undefined.
+If instead we write
+
+function greetUser(userName = "user") {
+    console.log("Hi " + userName);
+}
+
+calling greetUser() instead will return "Hi user". We can still call greetUser("moff") or whatever and have it print the username instead, this just gives 
+a default value in case we don't have a name entered.
+Specifically adding a real username in the parameters of greetUser() will replace the default because it is more specific.
+
+IF YOU TAKE IN MULITPLE parameters within a function, the ones that have default parameters ("user") must be at the end of the list.
+example, if greetUser function is instead "function greetUser(greetingPrefix, userName = "user")" you notice that the defaulted is at the end.
+
+function addNums(...number) - the ... here is a special operator (REST PARAMETER) that basically lets you add as many parameters as you would need.
+This basically means that w edon't have to print or get the result as an array, js will convert it back for us. Ironically if you
+pass in an array as your parameter, it will not work properly since ... expects a bunch of items to turn into an array, not an array of items already.
+Thus you will get an unexpected answer
+NOW IF YOU USE ... with an array, it will instead turn it back into a list of values instead (IN THIS FORM KNOWN AS THE SPREAD OPERATOR),
+ thus allowing it to work for addNums(...number)
+example below
+
+function sumUp(...numbers) {
+    let result = 0;
+    for (const number of numbers) {
+        result += number;
+    }
+    return result;
+}
+console.log(sumUp(...inputNumbers)); // returns 37
+
+So to sum up, the spread parameter pulls out items from an array and provides them as standalone values
+
+REST PARAMETER - combine any amount of received parameters into an array, used in parameter lists when defining function
+syntax function findMin(...values) {
+    //function code ...
+}
+
+SPREAD OPERATOR - split array OR object values into a comma separated list of values, used in any place where an array or object needs to be split up
+syntax const values = [5, 3, 10];
+Math.max(...values);
+
+Related, the built-in functions Math.min() and Math.max() both want lists of values, NOT arrays
+
+Something also to note, Functions are themselves objects. for example if you take the sumUp function from functions.js and log it with no parameters,
+you will see [Function: sumUp]
+You get a better example if you do it in browser. For example if you open up and f12 etc, and do function add(num1, num2) {return num1 + num2},
+and you console.dir(add); you get the following:
+add(num1, num2) {
+    arguments: null
+    caller: null
+    length: 2
+    name: "add"
+}
+Just like (because it is) an object, with key: value pairs that are inferred automatically.
+This is relevant in the case of expressJS
+When we called express, we required it, and then called it like a function as so: const app = express(); which created the app object.
+Now in other areas of the code, we used the express function to access properties on that function. This was possible because the developers of expressJS
+added custom properties to the express function to add more functionality to it.
+REMEMBER you can add properties to whatever object on the fly, for example we could have add.someOtherProperty, and if we dir it in the browser
+console we will see someOtherProperty: null
+This is why express could be used as a function and also an object, because at the core, FUNCTIONS ARE OBJECTS
+
+TEMPLATE LITERALS - /allows you to have multi line strings with line breaks and lets you plug in dynamic values (like variables) neatly. example
+console.log(`${variable1} test text text ${variable2}`) // note the back ticks instead of quotes.
+
+Arrays, like Functions, are also OBJECTS, therefore the appending something originally not in the array but it working is similar, though the syntax
+is different. instead it is arrayName.push("thing")
+
+//Primitive Values = numbers, strings, bools, undefined etc
+//Reference values = Objects
+These are typically stored in different parts of memory, due to the complexity of Objects
+more detailed:
+Primitive values are stored in a more basic kind of memory, don't occupy much space, are 'cheap' to copy therefore, and the VALUES THEMSELVES 
+ARE STORED IN VARIABLES OR CONSTANTS
+Reference values are stored in different more advanced comp memory, can occupy a lot of space, hence they are 'expensive' to copy, and ONLY ADDRESSES
+OF VALUES are stored in variables or constants (address or pointer)
+
+The reason why, by the way, that you are able to do arrayName.push("whatever") into const arrayName is because what is stored is not actually the
+value of the array or the array itself, rather a pointer to that array, basically its address in memory. So when you push a new value to the array
+the value is added to the existing array in memory BUT THE ADDRESS doesnt change, therefore it works
+
+speaking of reference values not wanting to be copied, as seen in behind-the-scenes.js, you notice that when you use p.age to subtract and have insert person 
+as the value, it actually subtracts the age from person itself, despite it being a constant. Remember, as a reference value, it doesn't copy and therefore
+modifies the original in memory
+
+
+TRY / CATCH
+This is a bit of error handling you can do if you think you might be getting errors on some part of code, but for whatever reason you want the code to continue running regardless, be it that the error isnt important, that something following it is super important etc. To do this, you simply put the faily code in a try {} block, and then follow it with a catch {} block which specifies what you want to do should that fail. Syntax below
+try {
+    const probFail = codeThatSucks;
+} catch {
+    console.log("uh oh stinky!!");
+}
+
+You can use this for various things, from simply trying the faily code again, to creating an object describing it etc etc. Often it is also used with the default error handling middleware. You shouldn't try catch all of your code by the way, because sometimes its good that an error crashes your program, since then of course you will know what the error is better, and also that different errors from different sources should be handled in different ways
+
+Regardless of try/catch, when you get an error, you always get some data, usually an object with more info about said error. You can accept the error data like a parameter even though it isnt actually a function after catch, ie 
+catch (error) { // accept an "error parameter" after catch
+    console.log(error.message);
+}
+The data will be different depending on the function or method that caused the error.
+
+YOU CAN ALSO throw your own errors
+function doSomething() {
+    // do something ...
+    throw { message: 'Something went wrong! };
+}
+
+
+SCOPING OF VARIABLES, CONSTANTS, FUNCTIONS - these can only be used in certain places. For example, if you create a function in errors.js, it can only be used within that file UNLESS you export it with 
+module.exports = {
+    function: function
+}
+The above only applies to server side or back end JS. In front end it works together, so long as the HTML document has all the relevant JS files linked to it
+
+However, something that applies to both front and back end JS regarding scoping, is that constants functions and varaibles are only available in the block where they are defined. Specifically a block is the code that is wrapped between a set of curly braces (outside of when you create an object). Of course if you for example create a variable in a block, and then it is defined in another block inside that one, the definition will not be available outside of it, but the variable itself will be, due to nesting OUTSIDE TO INSIDE is supported, not the other way aroudn
+YOU CAN create variables with the same name in different scopes and have it work however. for example having a let fileData in a function, and a const fileData in a try catch block inside of that function. Do note however that if you call fileData in the function outside of the trycatch block it will output the let in the function and not the const in the trycatch. This process is called Shadowing
