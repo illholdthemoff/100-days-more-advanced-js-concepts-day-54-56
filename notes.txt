@@ -122,3 +122,56 @@ The above only applies to server side or back end JS. In front end it works toge
 
 However, something that applies to both front and back end JS regarding scoping, is that constants functions and varaibles are only available in the block where they are defined. Specifically a block is the code that is wrapped between a set of curly braces (outside of when you create an object). Of course if you for example create a variable in a block, and then it is defined in another block inside that one, the definition will not be available outside of it, but the variable itself will be, due to nesting OUTSIDE TO INSIDE is supported, not the other way aroudn
 YOU CAN create variables with the same name in different scopes and have it work however. for example having a let fileData in a function, and a const fileData in a try catch block inside of that function. Do note however that if you call fileData in the function outside of the trycatch block it will output the let in the function and not the const in the trycatch. This process is called Shadowing
+
+Constructor Objects, or Classes, are blueprints. When you instantiate one via the new keyword you build another object based on them. When you have to make a similar object over multiple times, for example like a bunch of entries of people, their jobs and salaries, you can use a Class for that instead, like create one called class Job with member variables describing that, and instantiating new oneas each time you need to add one, as opposed to creating individual objects each and every time and having to retype everything. When you create classes, the convention is to use a Capital Letter. When you creat a constructor class, the syntax is as follows:
+
+class Job {
+  constructor(jobTitle, place, salary) {
+    this.title = jobTitle;
+    this.location = place;
+    this.salary = salary;
+  }
+}
+
+the constructor is another thing that contains the things you want to have inside your new class. 
+'this' is a special keyword referring to the object ebing created
+
+you can then instantiate you class as follows:
+const developer = new Job("big dog", "Greeneville", "400000");
+
+A nice thing about using classes, indeed what they are for, is that it allows you to create a bunch of similar objects without having to type it all out every single time and expose yourself to errors.
+
+Outside of the constructor in a custom built class, you can also add methods to it as well
+updating the class above, it would look like this:
+
+class Job {
+  constructor(jobTitle, place, salary) {
+    this.title = jobTitle;
+    this.location = place;
+    this.salary = salary;
+  }
+
+  describe() {
+    console.log(
+      `I'm a ${this.title} and I live in ${this.location} and I make ${this.salary} per year!`
+    );
+  }
+}
+
+again, the 'this' keyword here is important, and when used here refers to the object being created, so in this way you are able to refer to its own properties within the object. simply using ${title} would not work, you need the 'this'\
+
+DESTRUCTURING ARRAY (not destructing)
+
+const input = ["david", "owens"];
+
+const [first, last] = input; // destructuring array, means that values will be pulled out of the arrya and stored in the constants specified there (first, last). Doing it this way instead of defining consts individually is a much faster and more efficient way of using values from an array. YOU ALSO DO NOT have to do this with all values in an array, but the order is important
+This can also be done with objects:
+
+const job = {title: "jeff", location: "jeff city"}
+const { title } = job;
+console.log(title);
+//outputs "jeff"
+
+you can also overwrite the value
+const { title: newTitle } = job;
+
