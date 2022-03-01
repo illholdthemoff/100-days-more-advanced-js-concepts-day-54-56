@@ -175,3 +175,28 @@ console.log(title);
 you can also overwrite the value
 const { title: newTitle } = job;
 
+toString() is something you can call on basically any object in js to force convert it to a human readable string
+
+synchronous code - code that executes in order, and blocks the execution of code after it until it is done. Think readFileSync, which will
+wait until it is entirely loaded before moving onto the next thing. This of course is useful for example if we have a function that reads a file,
+and then another function displays what is returned to the user. In that case of course it must be synchronous.
+
+asynchronous code- the opposite, can execute whenever and does not rely on other things being loaded in. when using an asynchronous code
+function with readFile, you want to have 2 parameters in there: the file to be read, and a function that takes two arguments, namely error,
+and then the name of the file variable. syntax is follows:
+fileData = fs.readFile("data.txt", function(error, fileData) { //here error is called if there is an error, otherwise undefined, and fileData is the CALLBACK.
+     console.log("File parsing done!"); 
+     console.log(fileData.toString());
+  }); 
+
+  more basic syntax:
+  fs.readFile(path[,options]), callback
+  
+  Notice in async.js, if you run it, despite the 'Hi there!' line being the last in the code, it will load first in the console, because the readFile
+  is running asynchronously with the rest of the code, and it can take its time and load whenever it needs to without blocking up the rest of the 
+  execution or causing errors with other functions calling it.
+  
+  a Callback function is a function that should be executed in the future once the operation is finished
+
+  Using Async coding is good practice for really any function that you know or think would take a long time to execute, especially if it would end up blocking
+  other things in the program from occurring. This isnt always possible but it can help a lot.
