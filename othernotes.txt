@@ -1,0 +1,35 @@
+The more async tasks you have that depend on each other, the more callback functions inside callback functions you will have, often referred to as 'callback hell' due to how autistic and hard to read it is
+however there is another way of dealing with async code that is accepted by a variety of other code packages, called PROMISES
+Promises are methods that always have a .then() method at the end of it (fs.readFile("file.txt").then())
+The then method takes a function, typically an anonymous function and executes it when the thing it was used on is done, for example the file system reding a file.
+
+The advantage of using promises is that it allows you to write code in a more structured, easier to read way, and allows you to easily chain  more async code that relies on that. Exmaple below
+
+fs.readFile("input.data.csv")
+.then(function(data) {
+    const cleanedData = cleanData(data);
+    return storeDataInDatabase(cleanedData);
+})
+.then(function(result) {
+    if (result.changedData) {
+        return confirmDataChange();
+    }
+})
+.then(function(done) {
+    if (done) {
+        res.render("success");
+    }
+});
+
+notice the use of then, chaining all these things together without it looking goofy and retarded. Because they can be returened and chained in this way, less nesting is required to do a bunch of async tasks.
+
+SOMETHING TO NOTE WITH BOTH Promises and callback functions; trycatch blocks will not work as intended with them due to it being async. however with promises, you CAN use catch methods, which gets the error and then describes what occurred
+.catch(function(error) {
+    yaddayadda;
+});
+
+something else that applies SPECIFICALLY to promises, is async Await, you would use this typically when you have a function that can be async with only one big function, or a series of functions that rely on the previous being completed. this is done by adding async in front of the function, like async function readFile() {}
+Once done, this will return a promise, even without you typiing it out. This also unlocks another keyword, which can now be used inside of that async function, await. You would put this in front of any method that returns a promise within the block.
+const fileData = await fs.readFile(data.txt)
+When done this way, code execution will stop until the above is read out and done, so that effectively it is an even more efficient way to do promises.
+YET another benefit to this is that you can do trycatch with it for error handling
